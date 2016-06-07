@@ -1,10 +1,9 @@
-# api-proxy
-    
+
 ribbon:
   eureka:
     enabled: false
-  ConnectTimeout: 200
-  ReadTimeout: 2000
+  ConnectTimeout: 2000
+  ReadTimeout: 5000
   MaxAutoRetries: 1
   MaxAutoRetriesNextServer: 0
 
@@ -13,17 +12,16 @@ zuul:
     backendRibbon:
       path: /ribbon/**
       stripPrefix: true
-#      retryable: true
       serviceId: backendRibbon
     backendNonRibbon:
       path: /nonribbon/**
       stripPrefix: true
       url: http://localhost:8082/
   host:
-    socket-timeout-millis: 10000
-    connect-timeout-millis: 20000
+    connect-timeout-millis: 2000
+    socket-timeout-millis: 5000
 
-hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 200000
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 5000
 
 backendRibbon:
   ribbon:
@@ -31,3 +29,7 @@ backendRibbon:
 #    MaxAutoRetries: 5
 #    ConnectTimeout: 1500
 #    ReadTimeout: 1500
+
+logging:
+  level:
+    com.netflix: DEBUG

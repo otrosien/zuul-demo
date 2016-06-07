@@ -1,13 +1,13 @@
 # Zuul Proxy Timeout Evaluation
 
 The Zuul Proxy contained in Spring Cloud Zuul comes in two proxy modes. Each of the modes is configured quite differently.
-Here are the configuration options. A complete configuration is in the repository and at the end of this readme.
+Here are the configuration options. A complete configuration set is in the repository and at the end of this readme.
 
 
 ## 1) Non-ribbon mode
 
 The non-ribbon mode is using a combination of jersey-client and Apache HttpComponents. For timeouts it can only take a
-low-level socket timeout. The calls are not backed by hystrix and there is no client-side load balancing.
+low-level socket timeout. The calls are not backed by hystrix and there is no client-side load balancing possibility.
 
 Defaults:
 
@@ -28,14 +28,14 @@ See: org.springframework.cloud.netflix.zuul.filters.route.SimpleHostRoutingFilte
 
 ## 2) Ribbon mode
 
-"Normal modus operandi" for Netflix. Used when `serviceId` is set for a zuul route. Usually used in combination
+"Normal modus operandi" for Netflix. This mode is picked up when you set a `serviceId` for your zuul route. It is usually used in combination
 where the URL endpoints come from a service discovery, like Eureka. If this is not what you want, you need to force
-Eureka off (`ribbon.eureka.enabled: false`) It also uses Apache HttpComponents, or alternatively the legacy Ribbon RestClient,
-both running behind a client-side load-balancing algorithm. (com.netflix.client.AbstractLoadBalancerAwareClient)
+Eureka discovery to be off (`ribbon.eureka.enabled: false`) Under the hood it also uses Apache HttpComponents (or alternatively the legacy Ribbon RestClient),
+running behind a client-side load-balancing algorithm. (see com.netflix.client.AbstractLoadBalancerAwareClient)
 
 Timeouts can be applied on two levels.
 
-(1) General hystrix timeout around HTTP calls
+(1) General hystrix roundtrip time
 
 Defaults:
 * 1000 ms
