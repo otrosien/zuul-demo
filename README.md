@@ -3,14 +3,14 @@
 The Zuul Proxy contained in Spring Cloud Zuul comes in two proxy modes. Each of the modes is configured quite differently.
 Here are the configuration options. A complete configuration set is in the repository and at the end of this readme.
 
-## Running this example
+## 0) About this example
 
 There are four applications to start, e.g. via `./gradlew bootRun`.
 
-1. config-server (connects to port 8889) This needs to be first, to serve configuration for the other services
-2. backend-server (connects to port 8082) This is our backend service
-3. api-proxy (connects to port 8080) Our proxy
-4. hystrix-dashboard (connects to port 8099) Monitoring tool
+1. config-server (connects to port 8889) - This needs to be run first, serving configuration for the other services (see `config` folder)
+2. backend-server (connects to port 8082) - This is our backend service
+3. api-proxy (connects to port 8080) - Our proxy
+4. hystrix-dashboard (connects to port 8099) - Monitoring tool
 
 To test out different settings, there are two routes set-up on the api-proxy:
 
