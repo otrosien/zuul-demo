@@ -1,0 +1,33 @@
+# api-proxy
+    
+ribbon:
+  eureka:
+    enabled: false
+  ConnectTimeout: 200
+  ReadTimeout: 2000
+  MaxAutoRetries: 1
+  MaxAutoRetriesNextServer: 0
+
+zuul:
+  routes:
+    backendRibbon:
+      path: /ribbon/**
+      stripPrefix: true
+#      retryable: true
+      serviceId: backendRibbon
+    backendNonRibbon:
+      path: /nonribbon/**
+      stripPrefix: true
+      url: http://localhost:8082/
+  host:
+    socket-timeout-millis: 10000
+    connect-timeout-millis: 20000
+
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 200000
+
+backendRibbon:
+  ribbon:
+    listOfServers: localhost:8082
+#    MaxAutoRetries: 5
+#    ConnectTimeout: 1500
+#    ReadTimeout: 1500

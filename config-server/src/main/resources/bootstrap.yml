@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        bootstrap: true
+        native:
+          search-locations: file:./config/
+          fail-on-error: true
+      fail-fast: true
+  profiles:
+    active: native
