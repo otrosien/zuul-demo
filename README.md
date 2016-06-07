@@ -104,7 +104,7 @@ See:
 Netflix is deprecating the Ribbon library (as stated here: https://github.com/Netflix/ribbon/issues/248), so in the
 future, i.e. Spring 5, Spring Cloud would integrate rxnetty as a client replacement (stated here https://github.com/spring-cloud/spring-cloud-netflix/issues/961)
 
-## 3) Sample configuration
+## 4) Sample configuration
 
 ```
 ribbon:
