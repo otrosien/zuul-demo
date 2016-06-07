@@ -44,6 +44,8 @@ zuul:
     connect-timeout-millis: 200
 ```
 
+These properties can be refreshed from the configuration server (`POST` to `refresh` endpoint).
+
 See: org.springframework.cloud.netflix.zuul.filters.route.SimpleHostRoutingFilter
 
 
@@ -67,6 +69,8 @@ Configuration example:
 ```
 hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 1000
 ```
+
+This property can be refreshed from the configuration server (`POST` to `refresh` endpoint).
 
 (2) Ribbon connect and read timeouts global or per named ribbon service
 
@@ -93,6 +97,8 @@ backendService:
 Total number of requests: `(1 + MaxAutoRetries) * (1 + MaxAutoRetriesNextServer)`
 
 Intrestingly, by default there is one retry, as `MaxAutoRetriesNextServer` kicks in even if there is no second URL specified.
+These properties cannot be refreshed from the configuration server, based on my analysis, but the sugestion from this comment might help:
+https://github.com/spring-cloud/spring-cloud-netflix/issues/706
 
 See:
 * com.netflix.client.DefaultLoadBalancerRetryHandler
