@@ -28,7 +28,7 @@ The backend provides different endpoints for testing out different latency patte
 ## 1) Non-ribbon mode
 
 The non-ribbon mode is using a combination of jersey-client and Apache HttpComponents. For timeouts it can only take a
-low-level socket timeout. The calls are not backed by hystrix and there is no client-side load balancing possibility.
+low-level socket timeout. The calls are not backed by Hystrix and there is no client-side load balancing possibility.
 
 Defaults:
 
@@ -49,7 +49,7 @@ See: org.springframework.cloud.netflix.zuul.filters.route.SimpleHostRoutingFilte
 
 ## 2) Ribbon mode
 
-"Normal modus operandi" for Netflix. This mode is picked up when you set a `serviceId` for your zuul route. It is usually used in combination
+This mode is picked up when you set a `serviceId` for your zuul route. It is usually used in combination
 where the URL endpoints come from a service discovery, like Eureka. If this is not what you want, you need to force
 Eureka discovery to be off (`ribbon.eureka.enabled: false`) Under the hood it also uses Apache HttpComponents (or alternatively the legacy Ribbon RestClient),
 running behind a client-side load-balancing algorithm. (see com.netflix.client.AbstractLoadBalancerAwareClient)
@@ -98,6 +98,11 @@ See:
 * com.netflix.client.DefaultLoadBalancerRetryHandler
 * com.netflix.client.config.DefaultClientConfigImpl
 
+
+## 3) Caveats
+
+Netflix is deprecating the Ribbon library (as stated here: https://github.com/Netflix/ribbon/issues/248), so in the
+future, i.e. Spring 5, Spring Cloud would integrate rxnetty as a client replacement (stated here https://github.com/spring-cloud/spring-cloud-netflix/issues/961)
 
 ## 3) Sample configuration
 
