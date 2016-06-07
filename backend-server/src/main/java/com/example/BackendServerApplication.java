@@ -50,7 +50,7 @@ public class BackendServerApplication {
 		} catch (InterruptedException e) {
 			//
 		}
-		return "ok";
+		return String.format("Slept %s ms", millis);
 	}
 
 	@RequestMapping(method=RequestMethod.POST, path="/api/post/{millis}")
@@ -60,6 +60,6 @@ public class BackendServerApplication {
 		} catch (InterruptedException e) {
 			//
 		}
-		return "ok";
+		return String.format("Slept %s ms", millis);
 	}
 }

@@ -3,6 +3,27 @@
 The Zuul Proxy contained in Spring Cloud Zuul comes in two proxy modes. Each of the modes is configured quite differently.
 Here are the configuration options. A complete configuration set is in the repository and at the end of this readme.
 
+## Running this example
+
+There are four applications to start, e.g. via `./gradlew bootRun`.
+
+1. config-server (connects to port 8889) This needs to be first, to serve configuration for the other services
+2. backend-server (connects to port 8082) This is our backend service
+3. api-proxy (connects to port 8080) Our proxy
+4. hystrix-dashboard (connects to port 8099) Monitoring tool
+
+To test out different settings, there are two routes set-up on the api-proxy:
+
+* /ribbon/... for connecting to the backend via ribbon client
+* /nonribbon/... for connecting to the backend with plain http client
+
+The backend provides different endpoints for testing out different latency patterns.
+
+* /api/ok - responds immediately
+* /api/1s - responds in one second
+* /api/random - responds with random delay between 0 and 1 second
+* /api/sleep/{millis} - responds with delay configurable via path param
+* /api/post/{millis} - same, but using a `POST` method
 
 ## 1) Non-ribbon mode
 
@@ -35,8 +56,8 @@ running behind a client-side load-balancing algorithm. (see com.netflix.client.A
 
 Timeouts can be applied on two levels.
 
-(1) General Hystrix timeout (applied for the whole transaction) Beware that you should not set this to less than the ribbon read timeout or connect
-timeout.
+(1) General Hystrix timeout applied for the whole transaction. This would be your guaranteed response time.
+Beware that it does not make much sense to set this to less than the ribbon read timeout.
 
 Defaults:
 * 1000 ms
@@ -86,7 +107,7 @@ ribbon:
     enabled: false
   ConnectTimeout: 200
   ReadTimeout: 2000
-  MaxAutoRetries: 1
+  MaxAutoRetries: 2
   MaxAutoRetriesNextServer: 0
 
 zuul:
@@ -103,7 +124,7 @@ zuul:
     socket-timeout-millis: 10000
     connect-timeout-millis: 20000
 
-hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 200000
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 20000
 
 backendRibbon:
   ribbon:

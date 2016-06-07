@@ -21,7 +21,7 @@ zuul:
     connect-timeout-millis: 2000
     socket-timeout-millis: 100
 
-hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 5000
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 15000
 
 backendRibbon:
   ribbon:
