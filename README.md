@@ -1,4 +1,81 @@
-# Zuul Proxy Timeout Evaluation.
+# Zuul Proxy Timeout Evaluation
+
+The Zuul Proxy contained in Spring Cloud Zuul comes in two proxy modes. Each of the modes is configured quite differently.
+Here are the configuration options. A complete configuration is in the repository and at the end of this readme.
+
+
+## 1) Non-ribbon mode
+
+The non-ribbon mode is using a combination of jersey-client and Apache HttpComponents. For timeouts it can only take a
+low-level socket timeout. The calls are not backed by hystrix and there is no client-side load balancing.
+
+Defaults:
+
+* socket-timeout: 10.000 ms
+* connect-timeout: 20.000 ms
+
+Configuration example:
+
+```
+zuul:
+  host:
+    socket-timeout-millis: 500
+    connect-timeout-millis: 200
+```
+
+See: org.springframework.cloud.netflix.zuul.filters.route.SimpleHostRoutingFilter
+
+
+## 2) Ribbon mode
+
+"Normal modus operandi" for Netflix. Used when `serviceId` is set for a zuul route. Usually used in combination
+where the URL endpoints come from a service discovery, like Eureka. If this is not what you want, you need to force
+Eureka off (`ribbon.eureka.enabled: false`) It also uses Apache HttpComponents, or alternatively the legacy Ribbon RestClient,
+both running behind a client-side load-balancing algorithm. (com.netflix.client.AbstractLoadBalancerAwareClient)
+
+Timeouts can be applied on two levels.
+
+(1) General hystrix timeout around HTTP calls
+
+Defaults:
+* 1000 ms
+
+Configuration example:
+
+```
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 1000
+```
+
+(2) Connect and read timeouts global or per named ribbon service
+
+Defaults:
+
+* ReadTimeout: 5000 ms
+* ConnectTimeout: 2000 ms
+* MaxAutoRetries: 0
+* MaxAutoRetriesNextServer: 1
+
+Configuration example:
+
+```
+ribbon:
+    ConnectTimeout: 5000
+    ReadTimeout: 1500
+
+backendService:
+  ribbon:
+    ReadTimeout: ....
+
+```
+
+Total number of requests: (1 + MaxAutoRetries) * (1 + MaxAutoRetriesNextServer)
+
+See:
+* com.netflix.client.DefaultLoadBalancerRetryHandler
+* com.netflix.client.config.DefaultClientConfigImpl
+
+
+## 3) Sample configuration
 
 ```
 ribbon:
@@ -33,63 +110,7 @@ backendRibbon:
 #    ReadTimeout: 1500
 ```
 
-1) non-ribbon mode. Simplified, uses jersey-client/apache httpclient, only uses low-level socket timeout.
+Things to try out:
 
-defaults:
-* socket-timeout: 10s
-* connect-timeout: 2s
-
-configuration:
-```
-zuul:
-  host:
-    socket-timeout-millis: 500
-    connect-timeout-millis: 200
-```
-see: org.springframework.cloud.netflix.zuul.filters.route.SimpleHostRoutingFilter
-
-
-2) ribbon mode
-
-"Normal modus operandi" for Netflix. Used when `serviceId` is set.
-Need to force Eureka off (ribbon.eureka.enabled: false) Uses Apache httpclient / (legacy ribbon RestClient)
-behind a client-side load-balancing algorithm. (com.netflix.client.AbstractLoadBalancerAwareClient)
-
-(1) general hystrix timeout around all calls
-
-defaults:
-* 1000ms
-
-configuration:
-```
-hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 1000
-```
-
-(2) connect timeout and read timeouts global / per named ribbon service
-
-defaults:
-* ReadTimeout: 5000ms
-* ConnectTimeout: 2000ms
-* MaxAutoRetries: 0
-* MaxAutoRetriesNextServer: 1
-
-configuration:
-```
-ribbon:
-    ConnectTimeout: 5000
-    ReadTimeout: 1500
-
-backendService:
-  ribbon:
-    ReadTimeout: ....
-
-```
-
-Total number of requests: (1 + MaxAutoRetries) * (1 + MaxAutoRetriesNextServer)
-
-see:
-* com.netflix.client.DefaultLoadBalancerRetryHandler
-* com.netflix.client.config.DefaultClientConfigImpl
-
-
-
+* http://localhost:8080/ribbon/api/sleep/5000
+* http://localhost:8080/nonribbon/api/sleep/5000
