@@ -69,7 +69,7 @@ backendService:
 
 ```
 
-Total number of requests: (1 + MaxAutoRetries) * (1 + MaxAutoRetriesNextServer)
+Total number of requests: `(1 + MaxAutoRetries) * (1 + MaxAutoRetriesNextServer)`
 
 Intrestingly, by default there is one retry, as `MaxAutoRetriesNextServer` kicks in even if there is no second URL specified.
 
