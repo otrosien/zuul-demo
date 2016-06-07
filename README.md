@@ -98,7 +98,7 @@ Total number of requests: `(1 + MaxAutoRetries) * (1 + MaxAutoRetriesNextServer)
 
 Intrestingly, by default there is one retry, as `MaxAutoRetriesNextServer` kicks in even if there is no second URL specified.
 These properties cannot be refreshed from the configuration server, based on my analysis, but the suggestion from this comment might help:
-https://github.com/spring-cloud/spring-cloud-netflix/issues/706
+https://github.com/spring-cloud/spring-cloud-netflix/issues/706#issuecomment-163870612
 
 See:
 * com.netflix.client.DefaultLoadBalancerRetryHandler
