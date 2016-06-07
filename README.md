@@ -35,7 +35,8 @@ running behind a client-side load-balancing algorithm. (see com.netflix.client.A
 
 Timeouts can be applied on two levels.
 
-(1) General hystrix roundtrip time
+(1) General Hystrix timeout (applied for the whole transaction) Beware that you should not set this to less than the ribbon read timeout or connect
+timeout.
 
 Defaults:
 * 1000 ms
@@ -46,7 +47,7 @@ Configuration example:
 hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 1000
 ```
 
-(2) Connect and read timeouts global or per named ribbon service
+(2) Ribbon connect and read timeouts global or per named ribbon service
 
 Defaults:
 
